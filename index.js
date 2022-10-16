@@ -1,21 +1,25 @@
 import "dotenv/config";
+// Module pour connection pg avec hapi
 import HapiPostgresConnection from "hapi-postgres-connection";
-import hello from "./controllers/hello.js";
 import Hapi from "@hapi/hapi";
+import mainController from "./controllers/mainController.js";
+
+const port = process.env.PORT || 3000;
 
 const init = async () => {
+  // Creation du serveur avec hapi
   const server = Hapi.server({
-    port: 3007,
+    port,
     host: "localhost",
   });
-
+  // Connection a la db pgsql
   await server.register({
     plugin: HapiPostgresConnection,
   });
-
+  // Demarrage du serveur hapi
   await server.start();
   console.log(`Server running on ${server.info.uri}`);
-
+  // Creation de la route "/"
   server.route({
     method: "GET",
     path: "/",
@@ -27,7 +31,7 @@ const init = async () => {
   server.route({
     method: "GET",
     path: "/todos",
-    handler: hello.getTodos,
+    handler: mainController.getTodos,
   });
 };
 

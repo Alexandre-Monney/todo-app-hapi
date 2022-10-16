@@ -28,10 +28,34 @@ const init = async () => {
     },
   });
 
+  // CRUD sur les todos
+
+  // Recuperer tous les todos stockées en BDD
   server.route({
     method: "GET",
     path: "/todos",
     handler: mainController.getTodos,
+  });
+
+  // Ajout d'un nouveau todo en BDD
+  server.route({
+    method: "POST",
+    path: "/addTodo",
+    handler: mainController.addTodo,
+  });
+
+  // Supression d'un todo avec son id
+  server.route({
+    method: "DELETE",
+    path: "/deleteTodo/{id}",
+    handler: mainController.deleteTodo,
+  });
+
+  // Mise a jour de l'état fait/non fait
+  server.route({
+    method: "PATCH",
+    path: "/updateTodo/{id}",
+    handler: mainController.updateTodo,
   });
 };
 

@@ -1,6 +1,6 @@
-// const hello = require("./controllers/hello.js");
+import "dotenv/config";
+import HapiPostgresConnection from "hapi-postgres-connection";
 import hello from "./controllers/hello.js";
-// const Hapi = require("@hapi/hapi");
 import Hapi from "@hapi/hapi";
 
 const init = async () => {
@@ -9,19 +9,25 @@ const init = async () => {
     host: "localhost",
   });
 
+  await server.register({
+    plugin: HapiPostgresConnection,
+  });
+
   await server.start();
   console.log(`Server running on ${server.info.uri}`);
 
   server.route({
     method: "GET",
     path: "/",
-    handler: hello.test,
+    handler: () => {
+      return "Bienvenue sur /";
+    },
   });
 
   server.route({
     method: "GET",
-    path: "/oo",
-    handler: hello.testi,
+    path: "/todos",
+    handler: hello.getTodos,
   });
 };
 

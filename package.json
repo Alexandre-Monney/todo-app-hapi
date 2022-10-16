@@ -11,6 +11,11 @@
   "license": "ISC",
   "dependencies": {
     "@hapi/hapi": "^20.2.2",
+    "dotenv": "^16.0.3",
+    "hapi-postgres-connection": "^7.0.0",
     "node-fetch": "^3.2.10"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.20"
   }
 }

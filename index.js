@@ -11,6 +11,9 @@ const init = async () => {
   const server = Hapi.server({
     port,
     host: "localhost",
+    routes: {
+      cors: true,
+    },
   });
   // Connection a la db pgsql
   await server.register({
@@ -47,14 +50,14 @@ const init = async () => {
   // Supression d'un todo avec son id
   server.route({
     method: "DELETE",
-    path: "/deleteTodo/{id}",
+    path: "/todos/{id}",
     handler: mainController.deleteTodo,
   });
 
   // Mise a jour de l'état fait/non fait
   server.route({
     method: "PATCH",
-    path: "/updateTodo/{id}",
+    path: "/todos/{id}",
     handler: mainController.updateTodo,
   });
 };

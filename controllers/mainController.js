@@ -1,24 +1,42 @@
 export default {
   getTodos: async (request, h) => {
-    const query = `SELECT * FROM todos;`;
+    const query = `SELECT * FROM todos ORDER BY id ASC;`;
     try {
       // methode pour faire une requete a la bdd avec le module hapi-postgres
       const result = await request.pg.client.query(query);
-      return result.rows;
+      const formated = {
+        data: result.rows.map((e) => ({
+          type: "todo",
+          id: e.id,
+          attributes: { todo: e.todo, done: e.done },
+        })),
+      };
+      return formated;
     } catch (err) {
       console.log(err);
     }
   },
   addTodo: async (request, h) => {
     // Recuperation de la valeur de l'input envoyée par le front
-    const { todo } = request.payload;
-    // A revoir requete préparée pour injection sql
+    const {
+      data: {
+        attributes: { todo },
+      },
+    } = request.payload;
+    console.log(todo);
+    // requete préparée pour prevention injection sql
     const query = `INSERT INTO todos (todo) VALUES($1) RETURNING id,todo,done;`;
     try {
       const result = await request.pg.client.query(query, [todo]);
-      //! return inutile probablement car la réponse ne contient pas grand chose ( a regarder dans la requete sql direct )
-      console.log(result.rows);
-      return result.rows;
+      // Formattage pour correspondre au modele JSON:API pour le front EmberJS
+      const formated = {
+        data: result.rows.map((e) => ({
+          type: "todo",
+          id: e.id,
+          attributes: { todo: e.todo, done: e.done },
+        })),
+      };
+      return formated;
     } catch (err) {
       console.log(err);
     }
@@ -29,18 +47,39 @@ export default {
     const query = `DELETE FROM todos WHERE id=$1`;
     try {
       const result = await request.pg.client.query(query, [id]);
-      return result;
+      console.log("deleted todo : ", id);
+      const formated = {
+        data: result.rows.map((e) => ({
+          type: "todo",
+          id: e.id,
+          attributes: { todo: e.todo, done: e.done },
+        })),
+      };
+      return formated;
     } catch (err) {
       console.log(err);
     }
   },
   updateTodo: async (request, h) => {
     const { id } = request.params;
-    const { done } = request.payload;
+    const {
+      data: {
+        attributes: { done },
+      },
+    } = request.payload;
+    console.log(done);
+    // console.log(JSON.parse(done).done);
     const query = `UPDATE todos SET done=$1 WHERE id=$2 RETURNING id,todo,done;`;
     try {
       const result = await request.pg.client.query(query, [done, id]);
-      return result.rows;
+      const formated = {
+        data: result.rows.map((e) => ({
+          type: "todo",
+          id: e.id,
+          attributes: { todo: e.todo, done: e.done },
+        })),
+      };
+      return formated;
     } catch (err) {
       console.log(err);
     }

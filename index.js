@@ -11,10 +11,6 @@ const init = async () => {
   // Creation du serveur avec hapi
   const server = Hapi.server({
     port,
-    host,
-    routes: {
-      cors: true,
-    },
   });
   // Connection a la db pgsql
   await server.register({

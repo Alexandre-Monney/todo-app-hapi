@@ -5,12 +5,13 @@ import Hapi from "@hapi/hapi";
 import mainController from "./controllers/mainController.js";
 
 const port = process.env.PORT || 3000;
+const host = process.env.HOST || "localhost";
 
 const init = async () => {
   // Creation du serveur avec hapi
   const server = Hapi.server({
     port,
-    host: "localhost",
+    host,
     routes: {
       cors: true,
     },

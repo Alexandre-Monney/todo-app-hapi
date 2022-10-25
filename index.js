@@ -12,10 +12,14 @@ const init = async () => {
   const server = Hapi.server({
     port,
   });
+  try {
+    await server.register({
+      plugin: HapiPostgresConnection,
+    });
+  } catch (error) {
+    console.error(error);
+  }
   // Connection a la db pgsql
-  await server.register({
-    plugin: HapiPostgresConnection,
-  });
   // Demarrage du serveur hapi
   await server.start();
   console.log(`Server running on ${server.info.uri}`);

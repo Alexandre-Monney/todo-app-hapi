@@ -11,6 +11,10 @@ const init = async () => {
   // Creation du serveur avec hapi
   const server = Hapi.server({
     port,
+    host,
+    routes: {
+      cors: true,
+    },
   });
   try {
     await server.register({
